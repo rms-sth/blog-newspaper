@@ -192,3 +192,39 @@ class NewsletterView(View):
                 },
                 status=400,
             )
+
+
+from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger
+
+
+class PostSearchView(View):
+    template_name = "aznews/main/list/search.html"
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET["query"]
+        post_list = Post.objects.filter(
+            (Q(title__icontains=query) | Q(content__icontains=query))
+            & (
+                Q(
+                    status="active",
+                    published_at__isnull=False,
+                )
+            )
+        ).order_by("-published_at")
+
+        # pagination start
+        page = request.GET.get("page", 1)
+        paginate_by = 1
+        paginator = Paginator(post_list, paginate_by)
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        # pagination end
+
+        return render(
+            request,
+            self.template_name,
+            {"page_obj": posts, "query": query},
+        )

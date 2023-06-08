@@ -138,6 +138,21 @@
           })
       })
     </script>
+
+    <script>
+      $(".pagination_number").click(function(e) {
+          // do not perform the default action
+          e.preventDefault();
+          // http://localhost:8000/post-search/
+          let current_url = window.location.href.split('?')[0];
+          let params = new URL(document.location).searchParams;
+          let query = params.get("query"); // a
+          let href = $(this).attr('href'); // ?page=2
+          // http://localhost:8000/post-search/?page=2&query=a
+          let new_url = `${current_url}${href}&query=${query}`;
+          window.location.replace(new_url);
+      });
+    </script>
  
   </body>
 </html>

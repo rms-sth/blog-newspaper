@@ -11,4 +11,5 @@ urlpatterns = [
     path("contact/", views.ContactView.as_view(), name="contact"),
     path("comment/", views.CommentView.as_view(), name="comment"),
     path("newsletter/", views.NewsletterView.as_view(), name="newsletter"),
+    path("post-search/", views.PostSearchView.as_view(), name="post-search"),
 ]
