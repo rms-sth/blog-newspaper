@@ -101,6 +101,43 @@
     <!-- Jquery Plugins, main Jquery -->
     <script src="{% static 'aznews/assets/js/plugins.js' %}"></script>
     <script src="{% static 'aznews/assets/js/main.js' %}"></script>
+
+    <script>
+      $("#newsletter_side_form").submit(function(e) {
+          e.preventDefault() // do not perform what you are about to do
+          let serializedData = $(this).serialize()
+
+          $.ajax({
+              type: "POST",
+              url: "{% url 'newsletter' %}",
+              data: serializedData,
+              success: function(response) {
+                  $("#newsletter_side_form_message").append(
+                  `
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${response.message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  `
+                  )
+              },
+              error: function(response) {
+                  $("#newsletter_side_form_message").append(
+                  `
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${response.responseJSON.message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  `
+                  )
+              }
+          })
+      })
+    </script>
  
   </body>
 </html>

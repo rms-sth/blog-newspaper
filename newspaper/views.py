@@ -3,11 +3,12 @@ from typing import Any
 
 from django.contrib import messages
 from django.db.models.query import QuerySet
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.generic import ListView, TemplateView, View, DetailView
 
-from newspaper.forms import ContactForm
+from newspaper.forms import ContactForm, NewsletterForm
 from newspaper.models import Category, Post, Tag
 
 
@@ -158,4 +159,36 @@ class CommentView(View):
                 request,
                 "aznews/main/detail/detail.html",
                 {"post": post, "form": form},
+            )
+
+
+class NewsletterView(View):
+    def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get("x-requested-with")
+        if is_ajax == "XMLHttpRequest":
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Successfully subscribed to our newsletter.",
+                    },
+                    status=201,
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Form is not valid",
+                    },
+                    status=400,
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process request. Must be an AJAX XMLHttpRequest",
+                },
+                status=400,
             )

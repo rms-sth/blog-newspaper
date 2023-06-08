@@ -63,6 +63,13 @@ class Comment(TimeStampModel):
         return f"{self.email} | {self.comment[:70]}"
 
 
+class Newsletter(TimeStampModel):
+    email = models.EmailField()
+
+
+    def __str__(self):
+        return f"{self.email}"
+
 ## 1 - 1 Relationship
 # 1 user can have one 1 profile   => 1
 # 1 profile is associated to one 1 user  => 1
