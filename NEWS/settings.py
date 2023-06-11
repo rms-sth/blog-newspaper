@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "newspaper",
+    "blog_app",
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,6 @@ MESSAGE_TAGS = {
     messages.WARNING: "warning",
     messages.ERROR: "danger",
 }
+
+LOGIN_REDIRECT_URL = "/blog"
+LOGOUT_REDIRECT_URL = "/"
